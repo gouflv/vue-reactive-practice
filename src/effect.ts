@@ -18,7 +18,7 @@ export function track(target: Target, key: any) {
     keyToDepMap.set(key, (deps = new Set()));
   }
 
-  console.log("--> track", target, key);
+  // console.log("--> track", target, key);
 
   deps.add(activeEffect);
 
@@ -32,7 +32,7 @@ export function trigger(target: Target, key: any) {
   const deps = keyToDepMap.get(key);
   if (!deps) return;
 
-  console.log("----> trigger", target, key, deps);
+  // console.log("----> trigger", target, key, deps);
 
   deps.forEach((dep) => {
     if ((dep as any).options?.schedule) {
