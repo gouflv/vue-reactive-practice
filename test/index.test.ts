@@ -87,4 +87,23 @@ describe("effect", () => {
     obj.b = 2;
     expect(spy).toHaveBeenCalledTimes(2);
   });
+
+  it("multiple effects trigger", () => {
+    const spyA = vi.fn();
+    const spyB = vi.fn();
+
+    const target = { a: 1, b: 1 };
+    const obj = reactive(target);
+
+    effect(() => spyA(`obj.a eq ${obj.a}`));
+    effect(() => spyB(`obj.b eq ${obj.b}`));
+
+    expect(spyA).toHaveBeenNthCalledWith(1, "obj.a eq 1");
+    obj.a = 2;
+    expect(spyA).toHaveBeenNthCalledWith(2, "obj.a eq 2");
+
+    expect(spyB).toHaveBeenNthCalledWith(1, "obj.b eq 1");
+    obj.b = 2;
+    expect(spyB).toHaveBeenNthCalledWith(2, "obj.b eq 2");
+  });
 });

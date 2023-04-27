@@ -18,7 +18,11 @@ export function track(target: Target, key: any) {
     keyToDepMap.set(key, (deps = new Set()));
   }
 
+  console.log("--> track", target, key);
+
   deps.add(activeEffect);
+
+  activeEffect = null;
 }
 
 export function trigger(target: Target, key: any) {
@@ -27,6 +31,8 @@ export function trigger(target: Target, key: any) {
 
   const deps = keyToDepMap.get(key);
   if (!deps) return;
+
+  console.log("----> trigger", target, key, deps);
 
   deps.forEach((dep) => dep());
 }
