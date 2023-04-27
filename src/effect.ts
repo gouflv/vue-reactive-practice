@@ -34,12 +34,22 @@ export function trigger(target: Target, key: any) {
 
   console.log("----> trigger", target, key, deps);
 
-  deps.forEach((dep) => dep());
+  deps.forEach((dep) => {
+    if ((dep as any).options?.schedule) {
+      (dep as any).options?.schedule();
+    } else {
+      dep();
+    }
+  });
 }
 
-export function effect(fn: Function) {
-  activeEffect = fn;
-  fn();
+export function effect(fn: Function, options?: { schedule: Function }) {
+  const effectFn = () => {
+    activeEffect = effectFn;
+    fn();
+  };
+  effectFn.options = options;
+  effectFn();
 }
 
 export function getDepFromReactive(reactivated: Target, key: string) {
